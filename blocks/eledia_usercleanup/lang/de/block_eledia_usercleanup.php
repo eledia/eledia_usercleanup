@@ -1,20 +1,15 @@
 <?php
 
-$string['pluginname'] = 'eledia Nutzerbereinigung';
-$string['title'] = 'eledia Nutzerbereinigung';
-$string['el_navname'] = 'Nutzerbereinigung';
-$string['el_header'] = 'Konfiguration Nutzerbereinigung';
-$string['el_config_header'] = 'Konfiguration für das Löschen inaktiver Nutzer/innen';
+$string['back'] = 'zurück';
 
+$string['eledia_usercleanup:addinstance'] = 'Nutzerbereinigungs Block hinzufügen';
+$string['eledia_cleanup_active'] = 'Nutzerbereinigung aktivieren';
+$string['eledia_deleteinactiveuserafter'] = 'Wieviel Tage nach der Information soll der/die Nutzer/in gelöscht werden?';
 $string['eledia_deleteinactiveuserinterval'] = 'Intervall für die Prüfung der Nutzer/innen in Tagen';
 $string['eledia_informinactiveuserafter'] = 'Nach wieviel inaktiven Tagen soll der/die Nutzer/in informiert werden?';
-$string['eledia_deleteinactiveuserafter'] = 'Wieviel Tage nach der Information soll der/die Nutzer/in gelöscht werden?';
-
-$string['save_changes'] = 'Änderungen speichern';
-$string['saved'] = 'Änderungen gespeichert';
-$string['back'] = 'zurück';
-$string['eledia_cleanup_active'] = 'Nutzerbereinigung aktivieren';
-
+$string['el_config_header'] = 'Konfiguration für das Löschen inaktiver Nutzer/innen';
+$string['el_header'] = 'Konfiguration Nutzerbereinigung';
+$string['el_navname'] = 'Nutzerbereinigung';
 $string['email_subject'] = 'Löschung Ihres Accounts für das {$a->sitename} (Moodle)';
 $string['email_message'] = 'Guten Tag {$a->firstname} {$a->lastname},
 
@@ -28,4 +23,10 @@ Freundliche Grüße
 
 ::: Diese Nachricht wurde automatishc erzeugt :::
     ';
-?>
+
+$string['pluginname'] = 'eledia Nutzerbereinigung';
+
+$string['title'] = 'eledia Nutzerbereinigung';
+
+$string['save_changes'] = 'Änderungen speichern';
+$string['saved'] = 'Änderungen gespeichert';

@@ -1,20 +1,15 @@
 <?php
 
-$string['pluginname'] = 'eledia User Cleanup';
-$string['title'] = 'eledia User Cleanup';
-$string['el_navname'] = 'User Cleanup';
-$string['el_header'] = 'Configuration User Cleanup';
-$string['el_config_header'] = 'Configuration to delete inactive user accounts';
+$string['back'] = 'back';
 
+$string['eledia_usercleanup:addinstance'] = 'add user count block';
+$string['eledia_cleanup_active'] = 'activate usercleanup';
+$string['eledia_deleteinactiveuserafter'] = 'Number of Days after a notified user will be deleted ';
 $string['eledia_deleteinactiveuserinterval'] = 'Check for inactive Users every * days';
 $string['eledia_informinactiveuserafter'] = 'Days of inactivity after which an user will be informed of his pending deletion';
-$string['eledia_deleteinactiveuserafter'] = 'Number of Days after a notified user will be deleted ';
-
-$string['save_changes'] = 'save changes';
-$string['saved'] = 'Changes saved';
-$string['back'] = 'back';
-$string['eledia_cleanup_active'] = 'activate usercleanup';
-
+$string['el_config_header'] = 'Configuration to delete inactive user accounts';
+$string['el_header'] = 'Configuration User Cleanup';
+$string['el_navname'] = 'User Cleanup';
 $string['email_subject'] = 'inactiv on {$a->sitename}';
 $string['email_message'] = 'Dear {$a->firstname} {$a->lastname},
 
@@ -26,4 +21,10 @@ Best regards
 
 ::: This message was created automatically :::
     ';
-?>
+
+$string['pluginname'] = 'eledia User Cleanup';
+
+$string['title'] = 'eledia User Cleanup';
+
+$string['save_changes'] = 'save changes';
+$string['saved'] = 'Changes saved';
