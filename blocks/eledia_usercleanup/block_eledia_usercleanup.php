@@ -105,12 +105,12 @@ class block_eledia_usercleanup extends block_base {
                 echo "\ninactive user found: ".count($informuserlist);
 
                 // Get user which already get mails.
-                $informeduser = $DB->get_records('eledia_usercleanup');
+                $informeduser = $DB->get_records('block_eledia_usercleanup');
                 if ($informeduser) {
                     // Remove user which are active from table.
                     foreach ($informeduser as $iuser) {
                         if(!array_key_exists($iuser->user, $informuserlist)){
-                            $DB->delete_records('eledia_usercleanup', array('user' => $iuser->user));
+                            $DB->delete_records('block_eledia_usercleanup', array('user' => $iuser->user));
                             echo "\n $iuser->user active again, deletet from user cleanup table";
                         }
                     }
@@ -162,14 +162,14 @@ class block_eledia_usercleanup extends block_base {
                             $saveuserinfo->user = $informuser->id;
                             $saveuserinfo->mailedto = $informuser->email;
                             $saveuserinfo->timestamp = time();
-                            $DB->insert_record('eledia_usercleanup', $saveuserinfo);
+                            $DB->insert_record('block_eledia_usercleanup', $saveuserinfo);
                         }
                     }
                 }
 
                // Delete users.
                $deleteexpired = ((int)$CFG->eledia_deleteinactiveuserafter)*24*60*60;
-               $deleteuserids = $DB->get_records_select('eledia_usercleanup', "(timestamp + $deleteexpired) < $today AND user > 2", null,'','user');
+               $deleteuserids = $DB->get_records_select('block_eledia_usercleanup', "(timestamp + $deleteexpired) < $today AND user > 2", null,'','user');
 
                if ($deleteuserids) {
                     $deleteuserstring = false;
@@ -188,7 +188,7 @@ class block_eledia_usercleanup extends block_base {
                 if (isset($deleteuserlist)) {
                     foreach ($deleteuserlist as $deleteuser) {
                         delete_user($deleteuser);
-                        $DB->delete_records('eledia_usercleanup', array('user' => $deleteuser->id));
+                        $DB->delete_records('block_eledia_usercleanup', array('user' => $deleteuser->id));
                         echo "\ndeleting inactive user $deleteuser->username";
                     }
                 }

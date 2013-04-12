@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/block_eledia_usercleanup/db" VERSION="2011050801" COMMENT="XMLDB file for Moodle blocks/block_eledia_usercleanup"
+<XMLDB PATH="blocks/block_eledia_usercleanup/db" VERSION="20130412" COMMENT="XMLDB file for Moodle blocks/block_eledia_usercleanup"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="eledia_usercleanup" COMMENT="block_eledia_usercleanup table retrofitted from MySQL">
+    <TABLE NAME="block_eledia_usercleanup" COMMENT="block_eledia_usercleanup table retrofitted from MySQL">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="user"/>
-        <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" PREVIOUS="id" NEXT="mailedto"/>
-        <FIELD NAME="mailedto" TYPE="char" LENGTH="100" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="user" NEXT="timestamp"/>
-        <FIELD NAME="timestamp" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="mailedto"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="user"/>
+        <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" PREVIOUS="id" NEXT="mailedto"/>
+        <FIELD NAME="mailedto" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" PREVIOUS="user" NEXT="timestamp"/>
+        <FIELD NAME="timestamp" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="mailedto"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
