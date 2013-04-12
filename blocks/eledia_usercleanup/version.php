@@ -22,5 +22,7 @@
  * @copyright  2013 eLeDia GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$plugin->version = '2013041200';
+$plugin->version = 2013041201;// The current plugin version (Date: YYYYMMDDXX).
+$plugin->release = '0.1 (2013041201)';
+$plugin->requires  = 2012062505;        // Requires this Moodle version.
 $plugin->cron = 1;
