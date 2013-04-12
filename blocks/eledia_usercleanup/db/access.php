@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Configuration for the cleanup.
+ * Define capabilitys for usercleanup configuration block.
  *
  * @package    block
  * @subpackage eledia_usercleanup
@@ -23,29 +23,17 @@
  * @copyright  2013 eLeDia GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once('../../config.php');
-require_once('config_usercleanup_form.php');
+defined('MOODLE_INTERNAL') || die();
 
-// Check for valid admin user - no guest autologin.
-require_login(0, false);
-$PAGE->set_url('/blocks/eledia_usercleanup/config_usercleanup.php');
-$PAGE->set_context(get_context_instance(CONTEXT_SYSTEM));
-$PAGE->navbar->add(get_string('pluginname', 'block_eledia_usercleanup'));
-$PAGE->set_pagelayout('course');
+$capabilities = array(
 
-$context = get_context_instance(CONTEXT_SYSTEM);
+    'block/eledia_usercleanup:addinstance' => array(
+        'riskbitmask' => RISK_SPAM | RISK_PERSONAL,
 
-require_capability('moodle/site:config', $context);
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_BLOCK,
+        'archetypes' => array(),
 
-$mform = new config_usercleanup_form();
-
-if ($mform->is_cancelled()) {
-    redirect($CFG->httpswwwroot);
-}
-
-$header = get_string('el_header', 'block_eledia_usercleanup');
-$PAGE->set_heading($header);
-
-echo $OUTPUT->header();
-$mform->display();
-echo $OUTPUT->footer();
+        'clonepermissionsfrom' => 'moodle/site:manageblocks'
+    ),
+);

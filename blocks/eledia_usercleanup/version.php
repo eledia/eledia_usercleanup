@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-$plugin->version = '2012021400';
+/**
+ *
+ * @package    block
+ * @subpackage eledia_usercleanup
+ * @author     Benjamin Wolf <support@eledia.de>
+ * @copyright  2013 eLeDia GmbH
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+$plugin->version = '2013041200';
 $plugin->cron = 1;
-$plugin->dependencies = array('local_eledialib' => 2012012300);

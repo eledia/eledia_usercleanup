@@ -6,10 +6,10 @@
   <TABLES>
     <TABLE NAME="eledia_usercleanup" COMMENT="block_eledia_usercleanup table retrofitted from MySQL">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="user"/>
-        <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="mailedto"/>
-        <FIELD NAME="mailedto" TYPE="char" LENGTH="100" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="user" NEXT="timestamp"/>
-        <FIELD NAME="timestamp" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="mailedto"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="user"/>
+        <FIELD NAME="user" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" PREVIOUS="id" NEXT="mailedto"/>
+        <FIELD NAME="mailedto" TYPE="char" LENGTH="100" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="user" NEXT="timestamp"/>
+        <FIELD NAME="timestamp" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="mailedto"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
