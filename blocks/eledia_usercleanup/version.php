@@ -24,5 +24,6 @@
  */
 $plugin->version = 2013041201;// The current plugin version (Date: YYYYMMDDXX).
 $plugin->release = '0.1 (2013041201)';
+$plugin->maturity = MATURITY_STABLE;
 $plugin->requires  = 2012062505;        // Requires this Moodle version.
 $plugin->cron = 1;
