@@ -31,7 +31,7 @@ require_login(0, false);
 $PAGE->set_url('/blocks/eledia_usercleanup/config_usercleanup.php');
 $PAGE->set_context(get_context_instance(CONTEXT_SYSTEM));
 $PAGE->navbar->add(get_string('pluginname', 'block_eledia_usercleanup'));
-$PAGE->set_pagelayout('course');
+$PAGE->set_pagelayout('standard');
 
 $context = get_context_instance(CONTEXT_SYSTEM);
 
@@ -41,6 +41,17 @@ $mform = new config_usercleanup_form();
 
 if ($mform->is_cancelled()) {
     redirect($CFG->httpswwwroot);
+}
+
+if ($formdata = $mform->get_data()) {
+    if(isset ($formdata->eledia_cleanup_active)){
+        set_config('eledia_cleanup_active', 1);
+    }  else {
+        set_config('eledia_cleanup_active', 0);
+    }
+    set_config('eledia_deleteinactiveuserinterval', $formdata->eledia_deleteinactiveuserinterval);
+    set_config('eledia_informinactiveuserafter', $formdata->eledia_informinactiveuserafter);
+    set_config('eledia_deleteinactiveuserafter', $formdata->eledia_deleteinactiveuserafter);
 }
 
 $header = get_string('el_header', 'block_eledia_usercleanup');

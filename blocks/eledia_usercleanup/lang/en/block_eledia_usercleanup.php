@@ -25,6 +25,8 @@
  */
 $string['back'] = 'back';
 
+$string['dayserror'] = 'Number of days should not be 0 or negative';
+
 $string['eledia_usercleanup:addinstance'] = 'add user count block';
 $string['eledia_cleanup_active'] = 'activate usercleanup';
 $string['eledia_deleteinactiveuserafter'] = 'Number of Days after a notified user will be deleted ';

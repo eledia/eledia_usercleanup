@@ -31,8 +31,8 @@ require_once($CFG->libdir.'/formslib.php');
 
 class config_usercleanup_form extends moodleform {
 
-    function definition() {
-    global $CFG;
+    public function definition() {
+        global $CFG;
 
         $mform =& $this->_form;
 
@@ -49,37 +49,56 @@ class config_usercleanup_form extends moodleform {
         }
         $mform->addElement('text', 'eledia_deleteinactiveuserinterval',  get_string('eledia_deleteinactiveuserinterval','block_eledia_usercleanup'),  'maxlength="10" size="8"');
         $mform->setDefault('eledia_deleteinactiveuserinterval', $CFG->eledia_deleteinactiveuserinterval);
+        $mform->setType('eledia_deleteinactiveuserinterval', PARAM_INT);
 
         if(!isset($CFG->eledia_informinactiveuserafter)){
             set_config('eledia_informinactiveuserafter', '120');
         }
         $mform->addElement('text', 'eledia_informinactiveuserafter',  get_string('eledia_informinactiveuserafter','block_eledia_usercleanup'),  'maxlength="10" size="8"');
         $mform->setDefault('eledia_informinactiveuserafter', $CFG->eledia_informinactiveuserafter);
+        $mform->setType('eledia_informinactiveuserafter', PARAM_INT);
 
         if(!isset($CFG->eledia_deleteinactiveuserafter)){
             set_config('eledia_deleteinactiveuserafter', '120');
         }
         $mform->addElement('text', 'eledia_deleteinactiveuserafter',  get_string('eledia_deleteinactiveuserafter','block_eledia_usercleanup'),  'maxlength="10" size="8"');
         $mform->setDefault('eledia_deleteinactiveuserafter', $CFG->eledia_deleteinactiveuserafter);
+        $mform->setType('eledia_deleteinactiveuserafter', PARAM_INT);
 
         $mform->addElement('submit', 'submitbutton', get_string('save_changes', 'block_eledia_usercleanup'));
         $mform->addElement('cancel', 'cancelbutton', get_string('back', 'block_eledia_usercleanup'));
     }
 
-    function definition_after_data(){
+    public function definition_after_data(){
         $mform =& $this->_form;
 
         if($mform->isSubmitted()){
-            if(isset ($mform->_submitValues['eledia_cleanup_active'])){
-                set_config('eledia_cleanup_active', 1);
-            }  else {
-                set_config('eledia_cleanup_active', 0);
-            }
-            set_config('eledia_deleteinactiveuserinterval', $mform->_submitValues['eledia_deleteinactiveuserinterval']);
-            set_config('eledia_informinactiveuserafter', $mform->_submitValues['eledia_informinactiveuserafter']);
-            set_config('eledia_deleteinactiveuserafter', $mform->_submitValues['eledia_deleteinactiveuserafter']);
+//            if(isset ($mform->_submitValues['eledia_cleanup_active'])){
+//                set_config('eledia_cleanup_active', 1);
+//            }  else {
+//                set_config('eledia_cleanup_active', 0);
+//            }
+//            set_config('eledia_deleteinactiveuserinterval', $mform->_submitValues['eledia_deleteinactiveuserinterval']);
+//            set_config('eledia_informinactiveuserafter', $mform->_submitValues['eledia_informinactiveuserafter']);
+//            set_config('eledia_deleteinactiveuserafter', $mform->_submitValues['eledia_deleteinactiveuserafter']);
 
             $mform->addElement('static', 'saved', '', get_string('saved', 'block_eledia_usercleanup'));
         }
     }
+
+    public function validation ($data, $files) {
+
+        $errors = parent::validation($data, $files);
+
+        if ($data['eledia_informinactiveuserafter'] < 1) {
+            $errors['eledia_informinactiveuserafter'] = get_string('dayserror', 'block_eledia_usercleanup');
+        }
+
+        if ($data['eledia_deleteinactiveuserafter'] < 1) {
+            $errors['eledia_deleteinactiveuserafter'] = get_string('dayserror', 'block_eledia_usercleanup');
+        }
+
+        return $errors;
+    }
 }
+

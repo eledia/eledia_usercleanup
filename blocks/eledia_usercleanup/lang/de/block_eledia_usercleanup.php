@@ -25,6 +25,8 @@
  */
 $string['back'] = 'zurück';
 
+$string['dayserror'] = 'Anzahl der Tage darf nicht 0 oder negativ sein';
+
 $string['eledia_usercleanup:addinstance'] = 'Nutzerbereinigungs Block hinzufügen';
 $string['eledia_cleanup_active'] = 'Nutzerbereinigung aktivieren';
 $string['eledia_deleteinactiveuserafter'] = 'Wieviel Tage nach der Information soll der/die Nutzer/in gelöscht werden?';
