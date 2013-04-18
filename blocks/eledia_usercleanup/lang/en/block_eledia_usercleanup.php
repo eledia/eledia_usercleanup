@@ -29,9 +29,9 @@ $string['dayserror'] = 'Number of days should not be 0 or negative';
 
 $string['eledia_usercleanup:addinstance'] = 'add user count block';
 $string['eledia_cleanup_active'] = 'activate usercleanup';
-$string['eledia_deleteinactiveuserafter'] = 'Number of Days after a notified user will be deleted ';
+$string['eledia_deleteinactiveuserafter'] = 'Days after a notified user will be deleted ';
 $string['eledia_deleteinactiveuserinterval'] = 'Check for inactive Users every * days';
-$string['eledia_informinactiveuserafter'] = 'Days of inactivity after which an user will be informed of his pending deletion';
+$string['eledia_informinactiveuserafter'] = 'Inactiv days after a user will be informed';
 $string['el_config_header'] = 'Configuration to delete inactive user accounts';
 $string['el_header'] = 'Configuration User Cleanup';
 $string['el_navname'] = 'User Cleanup';
