@@ -44,7 +44,7 @@ Möchten Sie Ihren Account weiterhin nutzen, dann loggen sie sich bitte, innerha
 Freundliche Grüße
 {$a->admin}
 
-::: Diese Nachricht wurde automatishc erzeugt :::
+::: Diese Nachricht wurde automatisch erzeugt :::
     ';
 
 $string['pluginname'] = 'Nutzerbereinigung';
