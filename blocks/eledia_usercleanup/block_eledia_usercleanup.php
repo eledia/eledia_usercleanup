@@ -45,7 +45,7 @@ class block_eledia_usercleanup extends block_base {
         $this->content->text = '';
         $this->content->footer = '';
 
-        if (has_capability('moodle/site:config', get_context_instance(CONTEXT_SYSTEM))) {
+        if (has_capability('moodle/site:config', CONTEXT_SYSTEM::instance())) {
 
             $this->content->text .= '<ul>';
             $this->content->text .= '<li>';
@@ -132,13 +132,13 @@ class block_eledia_usercleanup extends block_base {
                     foreach ($informuserlist as $informuser) {
                         if (!array_key_exists($informuser->id, $informeduser)) {// No mail when already send one.
 
-                            $user =new object();
-                            $user->lang        = $informuser->lang;
-                            $user->email        = $informuser->email;
-                            $user->mailformat = 1;  // Always send HTML version as well.
+//                            $user =new object();
+//                            $user->lang        = $informuser->lang;
+//                            $user->email        = $informuser->email;
+//                            $user->mailformat = 1;  // Always send HTML version as well.
 
                             $site = get_site();
-                            $supportuser = generate_email_supportuser();
+                            $supportuser = core_user::get_support_user();
 
                             $data = new object();
                             $data->userinactivedays = $CFG->eledia_informinactiveuserafter;
@@ -155,7 +155,7 @@ class block_eledia_usercleanup extends block_base {
                             $messagehtml = text_to_html(get_string('email_message', 'block_eledia_usercleanup', $data), false, false, true);
 
                             echo "\ntry mail to user $informuser->username and mail: $informuser->email";
-                            email_to_user($user, $supportuser, $subject, $message, $messagehtml);
+                            email_to_user($informuser, $supportuser, $subject, $message, $messagehtml);
 
                             // Save mailed user.
                             $saveuserinfo = new object();
