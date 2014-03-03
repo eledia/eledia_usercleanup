@@ -20,7 +20,7 @@
  * @package    block
  * @subpackage eledia_usercleanup
  * @author     Benjamin Wolf <support@eledia.de>
- * @copyright  2013 eLeDia GmbH
+ * @copyright  2014 eLeDia GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -43,6 +43,19 @@ function xmldb_block_eledia_usercleanup_upgrade($oldversion) {
 
         // block_eledia_usercleanup savepoint reached
         upgrade_block_savepoint(true, 2013041201, 'eledia_usercleanup');
+    }
+
+    if ($oldversion < 2014030300) {
+
+        // Rename field user on table block_eledia_usercleanup to userid.
+        $table = new xmldb_table('block_eledia_usercleanup');
+        $field = new xmldb_field('user', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id');
+
+        // Launch rename field user.
+        $dbman->rename_field($table, $field, 'userid');
+
+        // Block_eledia_usercleanup savepoint reached.
+        upgrade_block_savepoint(true, 2014030300, 'eledia_usercleanup');
     }
 
     return true;

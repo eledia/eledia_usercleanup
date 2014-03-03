@@ -101,7 +101,7 @@ class block_eledia_usercleanup extends block_base {
                         AND ((lastaccess < $informexpired AND lastaccess > 0)
                             OR (lastaccess = 0 AND firstaccess < $informexpired AND firstaccess > 0)
                             OR (auth = 'manual' AND firstaccess = 0 AND lastaccess = 0  AND timemodified > 0 AND timemodified < $informexpired))";
-                $informuserlist = $DB->get_records_select('user', $sql, null,'','id, email, lang, firstname, lastname, currentlogin, username, lastaccess');
+                $informuserlist = $DB->get_records_select('user', $sql, null,'');
                 echo "\ninactive user found: ".count($informuserlist);
 
                 // Get user which already get mails.
@@ -109,9 +109,9 @@ class block_eledia_usercleanup extends block_base {
                 if ($informeduser) {
                     // Remove user which are active from table.
                     foreach ($informeduser as $iuser) {
-                        if(!array_key_exists($iuser->user, $informuserlist)){
-                            $DB->delete_records('block_eledia_usercleanup', array('user' => $iuser->user));
-                            echo "\n $iuser->user active again, deletet from user cleanup table";
+                        if(!array_key_exists($iuser->userid, $informuserlist)){
+                            $DB->delete_records('block_eledia_usercleanup', array('userid' => $iuser->userid));
+                            echo "\n $iuser->userid active again, deletet from user cleanup table";
                         }
                     }
                 } else {
@@ -122,7 +122,7 @@ class block_eledia_usercleanup extends block_base {
                 // Setting index to user id.
                 $informeduser2 = array();
                 foreach ($informeduser as $key => $infuser) {
-                    $informeduser2[$infuser->user] = $infuser;
+                    $informeduser2[$infuser->userid] = $infuser;
                 }
                 $informeduser = $informeduser2;
 
@@ -131,11 +131,6 @@ class block_eledia_usercleanup extends block_base {
                 if ($informuserlist) {
                     foreach ($informuserlist as $informuser) {
                         if (!array_key_exists($informuser->id, $informeduser)) {// No mail when already send one.
-
-//                            $user =new object();
-//                            $user->lang        = $informuser->lang;
-//                            $user->email        = $informuser->email;
-//                            $user->mailformat = 1;  // Always send HTML version as well.
 
                             $site = get_site();
                             $supportuser = core_user::get_support_user();
@@ -149,9 +144,9 @@ class block_eledia_usercleanup extends block_base {
                             $data->admin = generate_email_signoff();
                             $data->link = $CFG->wwwroot .'/index.php';
 
-                            $subject = get_string('email_subject', 'block_eledia_usercleanup', $data);
+                            $subject = get_string_manager()->get_string('email_subject', 'block_eledia_usercleanup', $data, $informuser->lang);
 
-                            $message     = get_string('email_message', 'block_eledia_usercleanup', $data);
+                            $message     = get_string_manager()->get_string('email_message', 'block_eledia_usercleanup', $data, $informuser->lang);
                             $messagehtml = text_to_html(get_string('email_message', 'block_eledia_usercleanup', $data), false, false, true);
 
                             echo "\ntry mail to user $informuser->username and mail: $informuser->email";
@@ -159,7 +154,7 @@ class block_eledia_usercleanup extends block_base {
 
                             // Save mailed user.
                             $saveuserinfo = new object();
-                            $saveuserinfo->user = $informuser->id;
+                            $saveuserinfo->userid = $informuser->id;
                             $saveuserinfo->mailedto = $informuser->email;
                             $saveuserinfo->timestamp = time();
                             $DB->insert_record('block_eledia_usercleanup', $saveuserinfo);
@@ -169,15 +164,15 @@ class block_eledia_usercleanup extends block_base {
 
                // Delete users.
                $deleteexpired = ((int)$CFG->eledia_deleteinactiveuserafter)*24*60*60;
-               $deleteuserids = $DB->get_records_select('block_eledia_usercleanup', "(timestamp + $deleteexpired) < $today AND user > 2", null,'','user');
+               $deleteuserids = $DB->get_records_select('block_eledia_usercleanup', "(timestamp + $deleteexpired) < $today", null,'','userid');
 
                if ($deleteuserids) {
                     $deleteuserstring = false;
                     foreach ($deleteuserids as $u) {
                         if(!$deleteuserstring){
-                            $deleteuserstring = "($u->user";
+                            $deleteuserstring = "($u->userid";
                         }else{
-                            $deleteuserstring .= ", $u->user";
+                            $deleteuserstring .= ", $u->userid";
                         }
                     }
                     $deleteuserstring .= ')';
@@ -188,7 +183,7 @@ class block_eledia_usercleanup extends block_base {
                 if (isset($deleteuserlist)) {
                     foreach ($deleteuserlist as $deleteuser) {
                         delete_user($deleteuser);
-                        $DB->delete_records('block_eledia_usercleanup', array('user' => $deleteuser->id));
+                        $DB->delete_records('block_eledia_usercleanup', array('userid' => $deleteuser->id));
                         echo "\ndeleting inactive user $deleteuser->username";
                     }
                 }

@@ -19,11 +19,11 @@
  * @package    block
  * @subpackage eledia_usercleanup
  * @author     Benjamin Wolf <support@eledia.de>
- * @copyright  2013 eLeDia GmbH
+ * @copyright  2014 eLeDia GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$plugin->version = 2013041800;// The current plugin version (Date: YYYYMMDDXX).
-$plugin->release = '0.2 (2013041800)';
+$plugin->version = 2014030300;// The current plugin version (Date: YYYYMMDDXX).
+$plugin->release = '0.2 (2014030300)';
 $plugin->maturity = MATURITY_STABLE;
 $plugin->requires  = 2012062505;        // Requires this Moodle version.
 $plugin->cron = 1;
