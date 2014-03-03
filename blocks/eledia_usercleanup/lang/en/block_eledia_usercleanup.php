@@ -38,8 +38,8 @@ $string['el_navname'] = 'User Cleanup';
 $string['email_subject'] = 'inactiv on {$a->sitename}';
 $string['email_message'] = 'Dear {$a->firstname} {$a->lastname},
 
-you haven\'t logged into $a->sitename for more than {$a->userinactivedays} days now. This is a timeperiod after which a user usually gets deleted.
-To prevent this you only need to log into {$a->link} within the next {$a->deleteinactiveuserafter} days.
+you haven\'t logged into {$a->sitename} for more than {$a->userinactivedays} days now. This is a timeperiod after which a user usually gets deleted.
+To prevent this you only need to log into {$a->link} within the next {$a->eledia_deleteinactiveuserafter} days.
 
 Best regards
 {$a->admin}
