@@ -132,6 +132,11 @@ class block_eledia_usercleanup extends block_base {
                     foreach ($informuserlist as $informuser) {
                         if (!array_key_exists($informuser->id, $informeduser)) {// No mail when already send one.
 
+                            $user =new object();
+                            $user->lang        = $informuser->lang;
+                            $user->email        = $informuser->email;
+                            $user->mailformat = 1;  // Always send HTML version as well.
+
                             $site = get_site();
                             $supportuser = generate_email_supportuser();
 
