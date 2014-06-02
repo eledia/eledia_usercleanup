@@ -43,9 +43,9 @@ if ($mform->is_cancelled()) {
 }
 
 if ($formdata = $mform->get_data()) {
-    if(isset ($formdata->eledia_cleanup_active)){
+    if (isset ($formdata->eledia_cleanup_active)) {
         set_config('eledia_cleanup_active', 1);
-    }  else {
+    } else {
         set_config('eledia_cleanup_active', 0);
     }
     set_config('eledia_deleteinactiveuserinterval', $formdata->eledia_deleteinactiveuserinterval);

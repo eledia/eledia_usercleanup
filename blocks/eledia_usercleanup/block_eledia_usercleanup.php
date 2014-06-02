@@ -25,23 +25,23 @@
  */
 class block_eledia_usercleanup extends block_base {
 
-    function init() {
+    public function init() {
         $this->title   = get_string('title', 'block_eledia_usercleanup');
         $this->version = 2012021400;// Format yyyymmddvv.
         $this->cron = 1;
     }
 
-    function applicable_formats() {
-        return array('site'=>true);
+    public function applicable_formats() {
+        return array('site' => true);
     }
 
-    function get_content() {
+    public function get_content() {
         global $USER, $CFG, $COURSE;
-        if ($this->content !== NULL) {
+        if ($this->content !== null) {
             return $this->content;
         }
 
-        $this->content =  new object();
+        $this->content = new object();
         $this->content->text = '';
         $this->content->footer = '';
 
@@ -58,11 +58,11 @@ class block_eledia_usercleanup extends block_base {
         return $this->content;
     }
 
-    function cron() {
+    public function cron() {
         global $CFG, $DB;
         error_reporting(E_ALL);
 
-        if(!isset($CFG->eledia_cleanup_active)){
+        if (!isset($CFG->eledia_cleanup_active)) {
             set_config('eledia_cleanup_active', '0');
         }
         if ($CFG->eledia_cleanup_active) {
@@ -76,18 +76,19 @@ class block_eledia_usercleanup extends block_base {
                 set_config('eledia_deleteinactiveuserafter', '120');
             }
 
-            if (isset($CFG->eledia_usercleanuplastrun)) {// Check if the script was called befor & set timediff between now and last run.
-                $lastrundiff = time()-$CFG->eledia_usercleanuplastrun;
+            // Check if the script was called befor & set timediff between now and last run.
+            if (isset($CFG->eledia_usercleanuplastrun)) {
+                $lastrundiff = time() - $CFG->eledia_usercleanuplastrun;
                 echo"\nlast usercleanup plugin was ".date('H:i:s d.m.Y', $CFG->eledia_usercleanuplastrun);
             } else {
-                $lastrundiff = ((int)($CFG->eledia_deleteinactiveuserinterval)*24*60*60)+1;
+                $lastrundiff = ((int)($CFG->eledia_deleteinactiveuserinterval) * 24 * 60 * 60) + 1;
                 echo"\nfirst run of usercleanup plugin";
 
             }
             $today = time();
 
-            if ($lastrundiff > ((int)($CFG->eledia_deleteinactiveuserinterval)*24*60*60)) {// Check if interval is over.
-                $informexpired = time() - (((int)$CFG->eledia_informinactiveuserafter)*24*60*60);
+            if ($lastrundiff > ((int)($CFG->eledia_deleteinactiveuserinterval) * 24 * 60 * 60)) { // Check if interval is over.
+                $informexpired = time() - (((int)$CFG->eledia_informinactiveuserafter) * 24 * 60 * 60);
 
                 // Get inactice user.
                 $not_to_check_user = $CFG->siteguest;
@@ -98,10 +99,22 @@ class block_eledia_usercleanup extends block_base {
                 }
                 $sql = "deleted = 0
                         AND confirmed = 1 AND id NOT IN($not_to_check_user)
-                        AND ((lastaccess < $informexpired AND lastaccess > 0)
-                            OR (lastaccess = 0 AND firstaccess < $informexpired AND firstaccess > 0)
-                            OR (auth = 'manual' AND firstaccess = 0 AND lastaccess = 0  AND timemodified > 0 AND timemodified < $informexpired))";
-                $informuserlist = $DB->get_records_select('user', $sql, null,'');
+                        AND (
+                            (lastaccess < $informexpired AND lastaccess > 0)
+                            OR (
+                                lastaccess = 0
+                                AND firstaccess < $informexpired
+                                AND firstaccess > 0
+                            )
+                            OR (
+                                auth = 'manual'
+                                AND firstaccess = 0
+                                AND lastaccess = 0
+                                AND timemodified > 0
+                                AND timemodified < $informexpired
+                            )
+                        )";
+                $informuserlist = $DB->get_records_select('user', $sql, null, '');
                 echo "\ninactive user found: ".count($informuserlist);
 
                 // Get user which already get mails.
@@ -109,7 +122,7 @@ class block_eledia_usercleanup extends block_base {
                 if ($informeduser) {
                     // Remove user which are active from table.
                     foreach ($informeduser as $iuser) {
-                        if(!array_key_exists($iuser->userid, $informuserlist)){
+                        if (!array_key_exists($iuser->userid, $informuserlist)) {
                             $DB->delete_records('block_eledia_usercleanup', array('userid' => $iuser->userid));
                             echo "\n $iuser->userid active again, deletet from user cleanup table";
                         }
@@ -144,10 +157,12 @@ class block_eledia_usercleanup extends block_base {
                             $data->admin = generate_email_signoff();
                             $data->link = $CFG->wwwroot .'/index.php';
 
-                            $subject = get_string_manager()->get_string('email_subject', 'block_eledia_usercleanup', $data, $informuser->lang);
+                            $sm = get_string_manager();
+                            $subject = $sm->get_string('email_subject', 'block_eledia_usercleanup', $data, $informuser->lang);
+                            $message = $sm->get_string('email_message', 'block_eledia_usercleanup', $data, $informuser->lang);
 
-                            $message     = get_string_manager()->get_string('email_message', 'block_eledia_usercleanup', $data, $informuser->lang);
-                            $messagehtml = text_to_html(get_string('email_message', 'block_eledia_usercleanup', $data), false, false, true);
+                            $messagehtml = get_string('email_message', 'block_eledia_usercleanup', $data);
+                            $messagehtml = text_to_html($messagehtml, false, false, true);
 
                             echo "\ntry mail to user $informuser->username and mail: $informuser->email";
                             email_to_user($informuser, $supportuser, $subject, $message, $messagehtml);
@@ -162,23 +177,24 @@ class block_eledia_usercleanup extends block_base {
                     }
                 }
 
-               // Delete users.
-               $deleteexpired = ((int)$CFG->eledia_deleteinactiveuserafter)*24*60*60;
-               $deleteuserids = $DB->get_records_select('block_eledia_usercleanup', "(timestamp + $deleteexpired) < $today", null,'','userid');
+                // Delete users.
+                $deleteexpired = ((int)$CFG->eledia_deleteinactiveuserafter) * 24 * 60 * 60;
+                $params = array($deleteexpired, $today);
+                $deleteuserids = $DB->get_records_select('block_eledia_usercleanup', "(timestamp + ?) < ?", $params, '', 'userid');
 
-               if ($deleteuserids) {
+                if ($deleteuserids) {
                     $deleteuserstring = false;
                     foreach ($deleteuserids as $u) {
-                        if(!$deleteuserstring){
+                        if (!$deleteuserstring) {
                             $deleteuserstring = "($u->userid";
-                        }else{
+                        } else {
                             $deleteuserstring .= ", $u->userid";
                         }
                     }
                     $deleteuserstring .= ')';
 
                     $deleteuserlist = $DB->get_records_select('user', "id IN $deleteuserstring AND deleted = 0 AND confirmed = 1");
-               }
+                }
 
                 if (isset($deleteuserlist)) {
                     foreach ($deleteuserlist as $deleteuser) {

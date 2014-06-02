@@ -35,13 +35,13 @@ function xmldb_block_eledia_usercleanup_upgrade($oldversion) {
 
     if ($oldversion < 2013041201) {
 
-        // Define table eledia_usercleanup to be renamed to block_eledia_usercleanup
+        // Define table eledia_usercleanup to be renamed to block_eledia_usercleanup.
         $table = new xmldb_table('eledia_usercleanup');
 
-        // Launch rename table for eledia_usercleanup
+        // Launch rename table for eledia_usercleanup.
         $dbman->rename_table($table, 'block_eledia_usercleanup');
 
-        // block_eledia_usercleanup savepoint reached
+        // Block_eledia_usercleanup savepoint reached.
         upgrade_block_savepoint(true, 2013041201, 'eledia_usercleanup');
     }
 
