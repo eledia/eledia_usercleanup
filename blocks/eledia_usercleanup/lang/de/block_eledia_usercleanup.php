@@ -30,7 +30,7 @@ $string['dayserror'] = 'Anzahl der Tage darf nicht 0 oder negativ sein';
 $string['eledia_usercleanup:addinstance'] = 'Nutzerbereinigungs Block hinzufügen';
 $string['eledia_cleanup_active'] = 'Nutzerbereinigung aktivieren';
 $string['eledia_deleteinactiveuserafter'] = 'Wieviel Tage nach der Information soll der/die Nutzer/in gelöscht werden?';
-$string['eledia_deleteinactiveuserinterval'] = 'Intervall für die Prüfung der Nutzer/innen in Tagen';
+$string['eledia_deleteinactiveuserinterval'] = 'Intervall für die Prüfung der Inaktivität/Löschung in Tagen';
 $string['eledia_informinactiveuserafter'] = 'Nach wieviel inaktiven Tagen soll der/die Nutzer/in informiert werden?';
 $string['el_config_header'] = 'Konfiguration für das Löschen inaktiver Nutzer/innen';
 $string['el_header'] = 'Konfiguration Nutzerbereinigung';
@@ -48,6 +48,9 @@ Freundliche Grüße
 
 ::: Diese Nachricht wurde automatisch erzeugt :::
     ';
+
+$string['hint'] = 'Das Intervall zur Prüfung greift für beide Prozesse(Inaktivität/Löschung).
+    Sinnvoll ist hier eine Einstellung die kleiner ist als die beiden anderen.';
 
 $string['pluginname'] = 'Nutzerbereinigung';
 

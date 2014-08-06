@@ -76,6 +76,8 @@ class config_usercleanup_form extends moodleform {
         $mform->setDefault('eledia_deleteinactiveuserafter', $CFG->eledia_deleteinactiveuserafter);
         $mform->setType('eledia_deleteinactiveuserafter', PARAM_INT);
 
+        $mform->addElement('static', '' , '', get_string('hint', 'block_eledia_usercleanup'));
+
         $mform->addElement('submit', 'submitbutton', get_string('save_changes', 'block_eledia_usercleanup'));
         $mform->addElement('cancel', 'cancelbutton', get_string('back', 'block_eledia_usercleanup'));
     }

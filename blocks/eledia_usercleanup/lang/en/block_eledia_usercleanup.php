@@ -30,7 +30,7 @@ $string['dayserror'] = 'Number of days should not be 0 or negative';
 $string['eledia_usercleanup:addinstance'] = 'add user count block';
 $string['eledia_cleanup_active'] = 'activate usercleanup';
 $string['eledia_deleteinactiveuserafter'] = 'Days after a notified user will be deleted ';
-$string['eledia_deleteinactiveuserinterval'] = 'Check for inactive Users every * days';
+$string['eledia_deleteinactiveuserinterval'] = 'Check for inactivity/deletion every * days';
 $string['eledia_informinactiveuserafter'] = 'Inactiv days after a user will be informed';
 $string['el_config_header'] = 'Configuration to delete inactive user accounts';
 $string['el_header'] = 'Configuration User Cleanup';
@@ -46,6 +46,9 @@ Best regards
 
 ::: This message was created automatically :::
     ';
+
+$string['hint'] = 'The check setting takes effect on both other settings(inactivity/deletion).
+    Therefor it is recommended to choose a smaller value for the check, than for the other settings.';
 
 $string['pluginname'] = 'User Cleanup';
 
