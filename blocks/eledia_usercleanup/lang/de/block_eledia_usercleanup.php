@@ -49,8 +49,8 @@ Freundliche Grüße
 ::: Diese Nachricht wurde automatisch erzeugt :::
     ';
 
-$string['hint'] = 'Das Intervall zur Prüfung greift für beide Prozesse(Inaktivität/Löschung).
-    Sinnvoll ist hier eine Einstellung die kleiner ist als die beiden anderen.';
+$string['hint'] = 'Das Intervall zur Prüfung greift für beide Prozesse (Inaktivität/Löschung).
+    Sinnvoll ist hier eine Einstellung, die kleiner ist als die beiden anderen.';
 
 $string['pluginname'] = 'Nutzerbereinigung';
 

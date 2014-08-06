@@ -47,7 +47,7 @@ Best regards
 ::: This message was created automatically :::
     ';
 
-$string['hint'] = 'The check setting takes effect on both other settings(inactivity/deletion).
+$string['hint'] = 'The check setting takes effect on both other settings (inactivity/deletion).
     Therefor it is recommended to choose a smaller value for the check, than for the other settings.';
 
 $string['pluginname'] = 'User Cleanup';
