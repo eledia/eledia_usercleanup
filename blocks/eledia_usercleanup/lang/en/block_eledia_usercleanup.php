@@ -25,6 +25,7 @@
  */
 $string['back'] = 'back';
 
+$string['cleanuptask'] = 'User cleanup';
 $string['dayserror'] = 'Number of days should not be 0 or negative';
 
 $string['eledia_usercleanup:addinstance'] = 'add user count block';
@@ -50,7 +51,9 @@ Best regards
 $string['hint'] = 'The check setting takes effect on both other settings (inactivity/deletion).
     Therefor it is recommended to choose a smaller value for the check, than for the other settings.';
 
+$string['notavailable'] = 'Not available';
 $string['pluginname'] = 'User Cleanup';
+$string['settingsinfo'] = 'The values for the intervals should be longer than the interval of the scheduled task.<br />The value of this interval can be found here <a href="{$a}">Scheduled tasks</a>.';
 
 $string['title'] = 'User Cleanup';
 

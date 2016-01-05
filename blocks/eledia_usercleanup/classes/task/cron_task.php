@@ -1,0 +1,179 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Define capabilitys for usercleanup configuration block.
+ *
+ * @package    block
+ * @subpackage eledia_usercleanup
+ * @author     Benjamin Wolf <support@eledia.de>
+ * @copyright  2013 eLeDia GmbH
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+namespace block_eledia_usercleanup\task;
+
+class cron_task extends \core\task\scheduled_task {
+
+    /**
+     * Get a descriptive name for this task (shown to admins).
+     *
+     * @return string
+     */
+    public function get_name() {
+        return get_string('cleanuptask', 'block_eledia_usercleanup');
+    }
+
+    /**
+     * Run forum cron.
+     */
+    public function execute() {
+        global $CFG, $DB;
+
+        if (!isset($CFG->eledia_informinactiveuserafter)) {
+            set_config('eledia_informinactiveuserafter', '120');
+        }
+        if (!isset($CFG->eledia_deleteinactiveuserafter)) {
+            set_config('eledia_deleteinactiveuserafter', '120');
+        }
+
+        $today = time();
+
+        $informexpired = time() - (((int)$CFG->eledia_informinactiveuserafter) * 24 * 60 * 60);
+
+        // Get inactice user.
+        $admins = get_admins();
+
+        $adminlist = array();
+        foreach ($admins as $adm) {
+            $adminlist[] = $adm->id;
+        }
+        // We don't want delete the guest user.
+        $adminlist[] = $CFG->siteguest;
+
+        list($nochecksql, $nocheckparams) = $DB->get_in_or_equal($adminlist, SQL_PARAMS_NAMED, 'nocheck', false);
+        $params = $nocheckparams;
+        $params['lastaccess'] = $informexpired;
+        $params['firstaccess'] = $informexpired;
+        $params['timemodified'] = $informexpired;
+
+        $sql = "deleted = 0
+                AND confirmed = 1 AND id $nochecksql
+                AND (
+                    (lastaccess < :lastaccess AND lastaccess > 0)
+                    OR (
+                        lastaccess = 0
+                        AND firstaccess < :firstaccess
+                        AND firstaccess > 0
+                    )
+                    OR (
+                        auth = 'manual'
+                        AND firstaccess = 0
+                        AND lastaccess = 0
+                        AND timemodified > 0
+                        AND timemodified < :timemodified
+                    )
+                )";
+        $informuserlist = $DB->get_records_select('user', $sql, $params, '');
+        mtrace("... inactive user found: ".count($informuserlist));
+
+        // Get user which already get mails.
+        $informeduser = $DB->get_records('block_eledia_usercleanup');
+        if ($informeduser) {
+            // Remove user which are active from table.
+            foreach ($informeduser as $iuser) {
+                if (!array_key_exists($iuser->userid, $informuserlist)) {
+                    $DB->delete_records('block_eledia_usercleanup', array('userid' => $iuser->userid));
+                    mtrace("... $iuser->userid active again, deletet from user cleanup table");
+                }
+            }
+        } else {
+            $informeduser = Array();
+            mtrace("... informuserlist leer");
+        }
+
+        // Setting index to user id.
+        $informeduser2 = array();
+        foreach ($informeduser as $key => $infuser) {
+            $informeduser2[$infuser->userid] = $infuser;
+        }
+        $informeduser = $informeduser2;
+
+        // Mail users.
+        mtrace("... user to mail timestamp $informexpired");
+        if ($informuserlist) {
+            foreach ($informuserlist as $informuser) {
+                if (!array_key_exists($informuser->id, $informeduser)) {// No mail when already send one.
+
+                    $site = get_site();
+                    $supportuser = \core_user::get_support_user();
+
+                    $data = new \stdClass();
+                    $data->userinactivedays = $CFG->eledia_informinactiveuserafter;
+                    $data->eledia_deleteinactiveuserafter = $CFG->eledia_deleteinactiveuserafter;
+                    $data->firstname = $informuser->firstname;
+                    $data->lastname = $informuser->lastname;
+                    $data->sitename = format_string($site->fullname);
+                    $data->admin = generate_email_signoff();
+                    $data->link = $CFG->wwwroot .'/index.php';
+
+                    $sm = get_string_manager();
+                    $subject = $sm->get_string('email_subject', 'block_eledia_usercleanup', $data, $informuser->lang);
+                    $message = $sm->get_string('email_message', 'block_eledia_usercleanup', $data, $informuser->lang);
+
+                    $messagehtml = get_string('email_message', 'block_eledia_usercleanup', $data);
+                    $messagehtml = text_to_html($messagehtml, false, false, true);
+
+                    mtrace("... try mail to user $informuser->username and mail: $informuser->email");
+                    email_to_user($informuser, $supportuser, $subject, $message, $messagehtml);
+
+                    // Save mailed user.
+                    $saveuserinfo = new \stdClass();
+                    $saveuserinfo->userid = $informuser->id;
+                    $saveuserinfo->mailedto = $informuser->email;
+                    $saveuserinfo->timestamp = time();
+                    $DB->insert_record('block_eledia_usercleanup', $saveuserinfo);
+                }
+            }
+        }
+
+        // Delete users.
+        $deleteexpired = ((int)$CFG->eledia_deleteinactiveuserafter) * 24 * 60 * 60;
+        $params = array($deleteexpired, $today);
+        $deleteusers = $DB->get_records_select('block_eledia_usercleanup', "(timestamp + ?) < ?", $params, '', 'userid');
+
+        if ($deleteusers) {
+            $deleteuserids = array();
+            foreach ($deleteusers as $u) {
+                $deleteuserids[] = $u->userid;
+            }
+            list($delusersql, $deluserparams) = $DB->get_in_or_equal($deleteuserids, SQL_PARAMS_NAMED, 'deluser', true);
+            $deleteuserlist = $DB->get_records_select('user', "id $delusersql AND deleted = 0 AND confirmed = 1", $deluserparams);
+        }
+
+        if (isset($deleteuserlist)) {
+            foreach ($deleteuserlist as $deleteuser) {
+                delete_user($deleteuser);
+                $DB->delete_records('block_eledia_usercleanup', array('userid' => $deleteuser->id));
+                mtrace("... deleting inactive user $deleteuser->username");
+            }
+        }
+        // Set lastrun in config table.
+        set_config('eledia_usercleanuplastrun', time());
+        mtrace("... setlastrunto: ".time());
+    }
+
+}

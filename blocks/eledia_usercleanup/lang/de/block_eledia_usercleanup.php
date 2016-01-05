@@ -25,6 +25,7 @@
  */
 $string['back'] = 'zurück';
 
+$string['cleanuptask'] = 'Nutzerbereinigung';
 $string['dayserror'] = 'Anzahl der Tage darf nicht 0 oder negativ sein';
 
 $string['eledia_usercleanup:addinstance'] = 'Nutzerbereinigungs Block hinzufügen';
@@ -52,7 +53,9 @@ Freundliche Grüße
 $string['hint'] = 'Das Intervall zur Prüfung greift für beide Prozesse (Inaktivität/Löschung).
     Sinnvoll ist hier eine Einstellung, die kleiner ist als die beiden anderen.';
 
+$string['notavailable'] = 'Nicht verfügbar';
 $string['pluginname'] = 'Nutzerbereinigung';
+$string['settingsinfo'] = 'Die einzustellenden Invervalle sollten länger als das Intervall des geplanten Vorgangs sein.<br />Dieses Intervall kann hier nachgeschaut werden <a href="{$a}">Geplante Vorgänge</a>.';
 
 $string['title'] = 'Nutzerbereinigung';
 

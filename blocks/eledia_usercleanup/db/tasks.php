@@ -15,14 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *
  * @package    block
  * @subpackage eledia_usercleanup
  * @author     Benjamin Wolf <support@eledia.de>
  * @copyright  2014 eLeDia GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$plugin->version = 2016010501;// The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2015111000;
-$plugin->maturity = MATURITY_STABLE;
-$plugin->component = "block_eledia_usercleanup";
+
+defined('MOODLE_INTERNAL') || die();
+
+$tasks = array(
+    array(
+        'classname' => 'block_eledia_usercleanup\task\cron_task',
+        'blocking' => 0,
+        'minute' => '0',
+        'hour' => '2',
+        'day' => '*',
+        'month' => '*',
+        'dayofweek' => '7'
+    )
+);
