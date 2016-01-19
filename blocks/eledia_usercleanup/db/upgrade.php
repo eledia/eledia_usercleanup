@@ -58,5 +58,18 @@ function xmldb_block_eledia_usercleanup_upgrade($oldversion) {
         upgrade_block_savepoint(true, 2014030300, 'eledia_usercleanup');
     }
 
+    if ($oldversion < 2016010503) {
+        global $CFG;
+
+        // Check the old activation setting for this block. If not active disable the block.
+        if (empty($CFG->eledia_cleanup_active)) {
+            $DB->set_field('block', 'visible', 0, array('name'=>'eledia_usercleanup'));
+            $DB->delete_records('block_eledia_usercleanup');
+        }
+
+        // Block_eledia_usercleanup savepoint reached.
+        upgrade_block_savepoint(true, 2016010503, 'eledia_usercleanup');
+    }
+
     return true;
 }

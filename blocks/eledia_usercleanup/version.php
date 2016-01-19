@@ -22,7 +22,7 @@
  * @copyright  2014 eLeDia GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$plugin->version = 2016010501;// The current plugin version (Date: YYYYMMDDXX).
+$plugin->version = 2016010503;// The current plugin version (Date: YYYYMMDDXX).
 $plugin->requires  = 2015111000;
 $plugin->maturity = MATURITY_STABLE;
 $plugin->component = "block_eledia_usercleanup";
