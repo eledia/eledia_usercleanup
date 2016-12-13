@@ -39,7 +39,7 @@ class block_eledia_usercleanup extends block_base {
             return $this->content;
         }
 
-        $this->content = new object();
+        $this->content = new stdClass();
         $this->content->text = '';
         $this->content->footer = '';
 
