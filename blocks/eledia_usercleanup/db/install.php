@@ -15,14 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Define capabilitys for usercleanup configuration block.
  *
  * @package    block
  * @subpackage eledia_usercleanup
  * @author     Benjamin Wolf <support@eledia.de>
- * @copyright  2014 eLeDia GmbH
+ * @copyright  2013 eLeDia GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$plugin->version = 2017011600;// The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2015111000;
-$plugin->maturity = MATURITY_STABLE;
-$plugin->component = "block_eledia_usercleanup";
+
+defined('MOODLE_INTERNAL') || die();
+
+function xmldb_block_eledia_usercleanup_install() {
+    global $DB;
+
+    // Disable this block by default.
+    $DB->set_field('block', 'visible', 0, array('name'=>'eledia_usercleanup'));
+}
