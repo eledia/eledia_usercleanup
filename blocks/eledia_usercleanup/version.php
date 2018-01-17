@@ -19,10 +19,13 @@
  * @package    block
  * @subpackage eledia_usercleanup
  * @author     Benjamin Wolf <support@eledia.de>
- * @copyright  2014 eLeDia GmbH
+ * @copyright  2018 eLeDia GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$plugin->version = 2017011600;// The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2015111000;
+
+defined('MOODLE_INTERNAL') || die();
+
+$plugin->version = 2018011003;// The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires  = 2017051503;
 $plugin->maturity = MATURITY_STABLE;
 $plugin->component = "block_eledia_usercleanup";

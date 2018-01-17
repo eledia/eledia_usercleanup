@@ -20,11 +20,13 @@
  * @package    block
  * @subpackage eledia_usercleanup
  * @author     Benjamin Wolf <support@eledia.de>
- * @copyright  2013 eLeDia GmbH
+ * @copyright  2018 eLeDia GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace block_eledia_usercleanup\task;
+
+defined('MOODLE_INTERNAL') || die();
 
 class cron_task extends \core\task\scheduled_task {
 
@@ -43,16 +45,23 @@ class cron_task extends \core\task\scheduled_task {
     public function execute() {
         global $CFG, $DB;
 
-        if (!isset($CFG->eledia_informinactiveuserafter)) {
-            set_config('eledia_informinactiveuserafter', '120');
+        $config = get_config('block_eledia_usercleanup');
+
+        if (!isset($config->eledia_informinactiveuserafter)) {
+            set_config('eledia_informinactiveuserafter', '120', 'block_eledia_usercleanup');
         }
-        if (!isset($CFG->eledia_deleteinactiveuserafter)) {
-            set_config('eledia_deleteinactiveuserafter', '120');
+        if (!isset($config->eledia_deleteinactiveuserafter)) {
+            set_config('eledia_deleteinactiveuserafter', '120', 'block_eledia_usercleanup');
         }
 
         $today = time();
 
-        $informexpired = time() - (((int)$CFG->eledia_informinactiveuserafter) * 24 * 60 * 60);
+        // Switch to delete timestamp if setting no info is set here.
+        if ($config->no_inform_mail) {
+            $informexpired = time() - (((int)$config->eledia_deleteinactiveuserafter) * 24 * 60 * 60);
+        } else {
+            $informexpired = time() - (((int)$config->eledia_informinactiveuserafter) * 24 * 60 * 60);
+        }
 
         // Get inactice user.
         $admins = get_admins();
@@ -88,9 +97,28 @@ class cron_task extends \core\task\scheduled_task {
                     )
                 )";
         $informuserlist = $DB->get_records_select('user', $sql, $params, '');
+
+        // Call for remove_enrolled_users if setting dont delete enrolled users is set.
+        if (!empty($config->ignore_enrolled_users)) {
+            $informuserlist = $this->remove_enrolled_users($informuserlist);
+        }
+        // Call for remove_users_with_role if roles are set settings.
+        if (!empty($config->exclude_roles)) {
+            $informuserlist = $this->remove_users_with_role($informuserlist, $config->exclude_roles);
+        }
+
         mtrace("... inactive user found: ".count($informuserlist));
 
-        // Get user which already get mails.
+        // Call for delete_users when setting no info is set and return.
+        if (!empty($config->no_inform_mail)) {
+            $this->delete_users($informuserlist);
+            // Set lastrun in config table.
+            set_config('eledia_usercleanuplastrun', time());
+            mtrace("... setlastrunto: ".time());
+            return;
+        }
+
+        // Get user which already got mailed.
         $informeduser = $DB->get_records('block_eledia_usercleanup');
         if ($informeduser) {
             // Remove user which are active from table.
@@ -102,7 +130,7 @@ class cron_task extends \core\task\scheduled_task {
             }
         } else {
             $informeduser = Array();
-            mtrace("... informuserlist leer");
+            mtrace("... informeduserlist empty");
         }
 
         // Setting index to user id.
@@ -122,8 +150,8 @@ class cron_task extends \core\task\scheduled_task {
                     $supportuser = \core_user::get_support_user();
 
                     $data = new \stdClass();
-                    $data->userinactivedays = $CFG->eledia_informinactiveuserafter;
-                    $data->eledia_deleteinactiveuserafter = $CFG->eledia_deleteinactiveuserafter;
+                    $data->userinactivedays = $config->eledia_informinactiveuserafter;
+                    $data->eledia_deleteinactiveuserafter = $config->eledia_deleteinactiveuserafter;
                     $data->firstname = $informuser->firstname;
                     $data->lastname = $informuser->lastname;
                     $data->sitename = format_string($site->fullname);
@@ -151,7 +179,7 @@ class cron_task extends \core\task\scheduled_task {
         }
 
         // Delete users.
-        $deleteexpired = ((int)$CFG->eledia_deleteinactiveuserafter) * 24 * 60 * 60;
+        $deleteexpired = ((int)$config->eledia_deleteinactiveuserafter) * 24 * 60 * 60;
         $params = array($deleteexpired, $today);
         $deleteusers = $DB->get_records_select('block_eledia_usercleanup', "(timestamp + ?) < ?", $params, '', 'userid');
 
@@ -165,15 +193,53 @@ class cron_task extends \core\task\scheduled_task {
         }
 
         if (isset($deleteuserlist)) {
-            foreach ($deleteuserlist as $deleteuser) {
-                delete_user($deleteuser);
-                $DB->delete_records('block_eledia_usercleanup', array('userid' => $deleteuser->id));
-                mtrace("... deleting inactive user $deleteuser->username");
-            }
+            $this->delete_users($deleteuserlist);
         }
+
         // Set lastrun in config table.
         set_config('eledia_usercleanuplastrun', time());
         mtrace("... setlastrunto: ".time());
     }
 
+    // Function to remove users with enrolments form userlist(remove_enrolled_users).
+    public function remove_enrolled_users($userlist) {
+        global $DB;
+        foreach ($userlist as $key => $user) {
+            $params = array(time(), $user->id);
+            $sql = 'SELECT * '
+                    . 'FROM {user_enrolments} '
+                    . 'WHERE (timeend > ? OR timeend = 0) '
+                    . 'AND status = 0 '
+                    . 'AND userid = ?';
+            $enrolments = $DB->get_records_sql($sql, $params);
+            if (count($enrolments) > 0) {
+                unset($userlist[$key]);
+            }
+        }
+        return $userlist;
+    }
+
+    // Remove users with specific roles in system context(remove_users_with_role).
+    public function remove_users_with_role($userlist, $role_list) {
+        $role_array = explode(',', $role_list);
+        foreach ($userlist as $key => $user) {
+            foreach ($role_array as $role) {
+                if (user_has_role_assignment($user->id, $role)) {
+                    unset($userlist[$key]);
+                    continue;
+                }
+            }
+        }
+        return $userlist;
+    }
+
+    // Function to delete_users.
+    public function delete_users($userlist) {
+        global $DB;
+        foreach ($userlist as $deleteuser) {
+            delete_user($deleteuser);
+            $DB->delete_records('block_eledia_usercleanup', array('userid' => $deleteuser->id));
+            mtrace("... deleting inactive user $deleteuser->username");
+        }
+    }
 }
