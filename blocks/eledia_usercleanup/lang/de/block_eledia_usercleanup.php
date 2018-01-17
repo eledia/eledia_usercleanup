@@ -20,19 +20,21 @@
  * @package    block
  * @subpackage eledia_usercleanup
  * @author     Benjamin Wolf <support@eledia.de>
- * @copyright  2013 eLeDia GmbH
+ * @copyright  2018 eLeDia GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['back'] = 'zurück';
 
 $string['cleanuptask'] = 'Nutzerbereinigung';
+
 $string['dayserror'] = 'Anzahl der Tage darf nicht 0 oder negativ sein';
 
 $string['eledia_usercleanup:addinstance'] = 'Nutzerbereinigungs Block hinzufügen';
 $string['eledia_cleanup_active'] = 'Nutzerbereinigung aktivieren';
-$string['eledia_deleteinactiveuserafter'] = 'Wieviel Tage nach der Information soll der/die Nutzer/in gelöscht werden?';
-$string['eledia_deleteinactiveuserinterval'] = 'Intervall für die Prüfung der Inaktivität/Löschung in Tagen';
-$string['eledia_informinactiveuserafter'] = 'Nach wieviel inaktiven Tagen soll der/die Nutzer/in informiert werden?';
+$string['eledia_deleteinactiveuserafter'] = 'Tage zum Löschen';
+$string['eledia_deleteinactiveuserafter_hint'] = 'Intervall für die Prüfung der Inaktivität/Löschung in Tagen';
+$string['eledia_informinactiveuserafter'] = 'Tage zur Information';
+$string['eledia_informinactiveuserafter_hint'] = 'Nach wieviel inaktiven Tagen soll der/die Nutzer/in informiert werden?';
 $string['el_config_header'] = 'Konfiguration für das Löschen inaktiver Nutzer/innen';
 $string['el_header'] = 'Konfiguration Nutzerbereinigung';
 $string['el_navname'] = 'Nutzerbereinigung';
@@ -49,15 +51,21 @@ Freundliche Grüße
 
 ::: Diese Nachricht wurde automatisch erzeugt :::
     ';
+$string['exclude_roles'] = 'Nicht berücksichtigte Rollen';
+$string['exclude_roles_hint'] = 'Nutzer, die den ausgewählten Rollen systemweit zugewiesen wurden, werden vom Prozess ausgeschlossen.';
 
 $string['hint'] = 'Das Intervall zur Prüfung greift für beide Prozesse (Inaktivität/Löschung).
     Sinnvoll ist hier eine Einstellung, die kleiner ist als die beiden anderen.';
 
+$string['ignore_enrolled_users'] = 'Nutzer mit Kurseinschreibungen ignorieren';
+
 $string['notavailable'] = 'Nicht verfügbar';
+$string['no_inform_mail'] = 'Keine Warnung verschicken sondern gleich löschen(verwendet ´Tage zum Löschen´ Einstellung).';
+
 $string['pluginname'] = 'Nutzerbereinigung';
+
 $string['settingsinfo'] = 'Die einzustellenden Invervalle sollten länger als das Intervall des geplanten Vorgangs sein.<br />Dieses Intervall kann hier nachgeschaut werden <a href="{$a}">Geplante Vorgänge</a>.';
-
-$string['title'] = 'Nutzerbereinigung';
-
 $string['save_changes'] = 'Änderungen speichern';
 $string['saved'] = 'Änderungen gespeichert';
+
+$string['title'] = 'Nutzerbereinigung';

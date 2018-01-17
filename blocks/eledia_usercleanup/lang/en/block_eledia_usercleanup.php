@@ -20,19 +20,21 @@
  * @package    block
  * @subpackage eledia_usercleanup
  * @author     Benjamin Wolf <support@eledia.de>
- * @copyright  2013 eLeDia GmbH
+ * @copyright  2018 eLeDia GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['back'] = 'back';
 
 $string['cleanuptask'] = 'User cleanup';
+
 $string['dayserror'] = 'Number of days should not be 0 or negative';
 
 $string['eledia_usercleanup:addinstance'] = 'add user count block';
 $string['eledia_cleanup_active'] = 'activate usercleanup';
-$string['eledia_deleteinactiveuserafter'] = 'Days after a notified user will be deleted ';
-$string['eledia_deleteinactiveuserinterval'] = 'Check for inactivity/deletion every * days';
-$string['eledia_informinactiveuserafter'] = 'Inactiv days after a user will be informed';
+$string['eledia_deleteinactiveuserafter'] = 'Days to delete';
+$string['eledia_deleteinactiveuserafter_hint'] = 'Days after a notified user will be deleted ';
+$string['eledia_informinactiveuserafter'] = 'Day to inform';
+$string['eledia_informinactiveuserafter_hint'] = 'Inactiv days after a user will be informed';
 $string['el_config_header'] = 'Configuration to delete inactive user accounts';
 $string['el_header'] = 'Configuration User Cleanup';
 $string['el_navname'] = 'User Cleanup';
@@ -47,15 +49,21 @@ Best regards
 
 ::: This message was created automatically :::
     ';
+$string['exclude_roles'] = 'Exclude roles';
+$string['exclude_roles_hint'] = 'Users assigned to this roles will be ignored.';
 
 $string['hint'] = 'The check setting takes effect on both other settings (inactivity/deletion).
     Therefor it is recommended to choose a smaller value for the check, than for the other settings.';
 
+$string['ignore_enrolled_users'] = 'Ignore users with course enrolments';
+
 $string['notavailable'] = 'Not available';
+$string['no_inform_mail'] = 'Send no warning but delete imediately(uses ´days to deleted´ setting)';
+
 $string['pluginname'] = 'User Cleanup';
+
 $string['settingsinfo'] = 'The values for the intervals should be longer than the interval of the scheduled task.<br />The value of this interval can be found here <a href="{$a}">Scheduled tasks</a>.';
-
-$string['title'] = 'User Cleanup';
-
 $string['save_changes'] = 'save changes';
 $string['saved'] = 'Changes saved';
+
+$string['title'] = 'User Cleanup';

@@ -30,5 +30,5 @@ function xmldb_block_eledia_usercleanup_install() {
     global $DB;
 
     // Disable this block by default.
-    $DB->set_field('block', 'visible', 0, array('name'=>'eledia_usercleanup'));
+    $DB->set_field('block', 'visible', 0, array('name' => 'eledia_usercleanup'));
 }

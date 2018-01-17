@@ -20,7 +20,7 @@
  * @package    block
  * @subpackage eledia_usercleanup
  * @author     Benjamin Wolf <support@eledia.de>
- * @copyright  2013 eLeDia GmbH
+ * @copyright  2018 eLeDia GmbH
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,21 +30,41 @@ if ($ADMIN->fulltree) {
 
     $taskurl = new moodle_url('/admin/tool/task/scheduledtasks.php');
 
-    $settings->add(new admin_setting_heading('eledia_usercleanup_hdr',
+    $configs[] = new admin_setting_heading('eledia_usercleanup_hdr',
                                         get_string('pluginname', 'block_eledia_usercleanup'),
-                                        get_string('settingsinfo', 'block_eledia_usercleanup', $taskurl->out())));
-
-
-    $settings->add(new admin_setting_configtext('eledia_informinactiveuserafter',
+                                        get_string('settingsinfo', 'block_eledia_usercleanup', $taskurl->out()));
+    $configs[] = new admin_setting_configtext('eledia_informinactiveuserafter',
                                         get_string('eledia_informinactiveuserafter', 'block_eledia_usercleanup'),
-                                        '',
+                                        get_string('eledia_informinactiveuserafter_hint', 'block_eledia_usercleanup'),
                                         120,
-                                        PARAM_INT, 10));
-
-    $settings->add(new admin_setting_configtext('eledia_deleteinactiveuserafter',
+                                        PARAM_INT, 10);
+    $configs[] = new admin_setting_configtext('eledia_deleteinactiveuserafter',
                                         get_string('eledia_deleteinactiveuserafter', 'block_eledia_usercleanup'),
-                                        '',
+                                        get_string('eledia_deleteinactiveuserafter_hint', 'block_eledia_usercleanup'),
                                         120,
-                                        PARAM_INT, 10));
+                                        PARAM_INT, 10);
 
+    $configs[] = new admin_setting_configcheckbox('ignore_enrolled_users',
+            get_string('ignore_enrolled_users', 'block_eledia_usercleanup'), '', false);
+    $configs[] = new admin_setting_configcheckbox('no_inform_mail',
+            get_string('no_inform_mail', 'block_eledia_usercleanup'), '', false);
+
+    // Which roles should be excluded?
+    $allroles = array();
+    if ($roles = role_fix_names(get_all_roles(), context_system::instance())) {
+        foreach ($roles as $role) {
+            $rolename = strip_tags(format_string($role->localname, true));
+            $allroles[$role->id] = $rolename;
+        }
+    }
+    $configs[] = new admin_setting_configmultiselect('exclude_roles',
+                                                get_string('exclude_roles', 'block_eledia_usercleanup'),
+                                                get_string('exclude_roles_hint', 'block_eledia_usercleanup'),
+                                                array(),
+                                                $allroles);
+
+    foreach ($configs as $config) {
+        $config->plugin = 'block_eledia_usercleanup';
+        $settings->add($config);
+    }
 }
