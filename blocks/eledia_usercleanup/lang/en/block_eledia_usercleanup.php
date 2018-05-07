@@ -61,6 +61,10 @@ $string['notavailable'] = 'Not available';
 $string['no_inform_mail'] = 'Send no warning but delete imediately(uses ´days to deleted´ setting)';
 
 $string['pluginname'] = 'User Cleanup';
+$string['privacy:metadata:userid'] = 'userid';
+$string['privacy:metadata:mailedto'] = 'mailed to';
+$string['privacy:metadata:timestamp'] = 'email timestamp';
+$string['privacy:metadata:block'] = 'The usercleanup block stores temporare data about the emailed warings in its own table.';
 
 $string['settingsinfo'] = 'The values for the intervals should be longer than the interval of the scheduled task.<br />The value of this interval can be found here <a href="{$a}">Scheduled tasks</a>.';
 $string['save_changes'] = 'save changes';

@@ -63,6 +63,10 @@ $string['notavailable'] = 'Nicht verfügbar';
 $string['no_inform_mail'] = 'Keine Warnung verschicken sondern gleich löschen(verwendet ´Tage zum Löschen´ Einstellung).';
 
 $string['pluginname'] = 'Nutzerbereinigung';
+$string['privacy:metadata:userid'] = 'Nutzer id';
+$string['privacy:metadata:mailedto'] = 'gesendet an';
+$string['privacy:metadata:timestamp'] = 'email Zeitstempel';
+$string['privacy:metadata:block'] = 'Der Nutzerbereinigungsblock speichert temporäre Daten über versendeten Warn emails in seiner eigenen Tabelle.';
 
 $string['settingsinfo'] = 'Die einzustellenden Invervalle sollten länger als das Intervall des geplanten Vorgangs sein.<br />Dieses Intervall kann hier nachgeschaut werden <a href="{$a}">Geplante Vorgänge</a>.';
 $string['save_changes'] = 'Änderungen speichern';

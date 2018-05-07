@@ -15,7 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *
  * @package    block
  * @subpackage eledia_usercleanup
  * @author     Benjamin Wolf <support@eledia.de>
@@ -23,9 +22,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->version = 2018050400;// The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2017051503;
-$plugin->maturity = MATURITY_STABLE;
-$plugin->component = "block_eledia_usercleanup";
+// List of observers.
+$observers = [
+    [
+        'eventname'   => '\core\event\user_deleted',
+        'callback'  => 'eledia_usercleanup::user_deleted',
+        'includefile' => '/blocks/eledia_usercleanup/classes/observer.php',
+        'internal'    => false,
+    ],
+];
