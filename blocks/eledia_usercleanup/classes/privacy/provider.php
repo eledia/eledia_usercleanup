@@ -18,7 +18,6 @@
  * Privacy Subsystem implementation for block_eledia_usercleanup.
  *
  * @package    block_eledia_usercleanup
- * @copyright  2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.eledia_usercleanup GNU GPL v3 or later
  */
 
@@ -40,10 +39,7 @@ use \core_privacy\local\metadata\collection;
  */
 class provider implements
         // The block_eledia_usercleanup block stores user provided data.
-        \core_privacy\local\metadata\provider,
-
-        // The block_eledia_usercleanup block provides data directly to core.
-        \core_privacy\local\request\plugin\provider {
+        \core_privacy\local\metadata\provider {
 
     /**
      * Returns information about how block_eledia_usercleanup stores its data.
