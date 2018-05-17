@@ -33,13 +33,14 @@ use \core_privacy\local\metadata\collection;
 
 /**
  * Privacy Subsystem implementation for block_eledia_usercleanup.
- *
- * @copyright  2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.eledia_usercleanup GNU GPL v3 or later
  */
 class provider implements
-        // The block_eledia_usercleanup block stores user provided data.
-        \core_privacy\local\metadata\provider {
+        // This tool stores user data.
+        \core_privacy\local\metadata\provider,
+
+        // This tool may provide access to and deletion of user data.
+        \core_privacy\local\request\plugin\provider {
 
     /**
      * Returns information about how block_eledia_usercleanup stores its data.
@@ -109,5 +110,25 @@ class provider implements
             $data->timestamp = $cleanupinfo->timestamp;
             writer::with_context($context)->export_data([], $data);
         }
+    }
+
+    /**
+     * Delete all data for all users in the specified context.
+     *
+     * Data are delted by user deletion event anyway. No nee for further action here.
+     *
+     * @param \context $context The context to delete in.
+     */
+    public static function delete_data_for_all_users_in_context(\context $context) {
+    }
+
+    /**
+     * Delete all user data for the specified user, in the specified contexts.
+     *
+     * Data are delted by user deletion event anyway. No nee for further action here.
+     *
+     * @param approved_contextlist $contextlist A list of contexts approved for deletion.
+     */
+    public static function delete_data_for_user(approved_contextlist $contextlist) {
     }
 }
