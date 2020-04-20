@@ -30,17 +30,22 @@ use \core_privacy\local\request\writer;
 use \core_privacy\local\request\helper;
 use \core_privacy\local\request\deletion_criteria;
 use \core_privacy\local\metadata\collection;
+use \core_privacy\local\request\userlist;
+use \core_privacy\local\request\approved_userlist;
 
 /**
  * Privacy Subsystem implementation for block_eledia_usercleanup.
  * @license    http://www.gnu.org/copyleft/gpl.eledia_usercleanup GNU GPL v3 or later
  */
 class provider implements
-        // This tool stores user data.
-        \core_privacy\local\metadata\provider,
+    // This tool stores user data.
+    \core_privacy\local\metadata\provider,
 
-        // This tool may provide access to and deletion of user data.
-        \core_privacy\local\request\plugin\provider {
+    // This tool may provide access to and deletion of user data.
+    \core_privacy\local\request\plugin\provider,
+
+    // The block_eledia_usercleanup is capable of determining which users have data within it.
+    \core_privacy\local\request\core_userlist_provider  {
 
     /**
      * Returns information about how block_eledia_usercleanup stores its data.
@@ -87,9 +92,42 @@ class provider implements
     }
 
     /**
+     * Get the list of users within a specific context.
+     *
+     * @param userlist $userlist The userlist containing the list of users who have data in this context/plugin combination.
+     * @throws \dml_exception
+     */
+    public static function get_users_in_context(userlist $userlist) {
+        global $DB;
+
+        // This function is used to tell if the user has data in the context of this plugin.
+        // Since we adress the user by userid in this plugin we only have to check for this.
+        $context = $userlist->get_context();
+
+        // We store only in user context so catch all other calls.
+        if (!$context instanceof \context_user) {
+            return;
+        }
+
+        $user = $DB->get_record('user', array('id' => $context->instanceid));
+        $has_data = false;
+
+        // Make the check for each table.
+        if ($DB->records_exists('block_eledia_usercleanup', array('userid' => $user->id))) {
+            $has_data = true;
+        }
+
+        // If we have data add the user.
+        if ($has_data) {
+            $userlist->add_user($user->id);
+        }
+    }
+
+    /**
      * Export all user data for the specified user, in the specified contexts.
      *
-     * @param   approved_contextlist    $contextlist    The approved contexts to export information for.
+     * @param approved_contextlist $contextlist The approved contexts to export information for.
+     * @throws \dml_exception
      */
     public static function export_user_data(approved_contextlist $contextlist) {
         global $DB;
@@ -115,11 +153,23 @@ class provider implements
     /**
      * Delete all data for all users in the specified context.
      *
-     * Data are delted by user deletion event anyway. No nee for further action here.
+     * Data are delted by user deletion event anyway. No need for further action here.
      *
      * @param \context $context The context to delete in.
      */
     public static function delete_data_for_all_users_in_context(\context $context) {
+    }
+
+    /**
+     * Delete multiple users within a single context.
+     *
+     * Data are delted by user deletion event anyway. No need for further action here.
+     *
+     * @param approved_userlist $userlist The approved context and user information to delete information for.
+     *
+     * @throws \dml_exception
+     */
+    public static function delete_data_for_users(approved_userlist $userlist) {
     }
 
     /**
