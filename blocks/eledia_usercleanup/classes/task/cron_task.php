@@ -225,6 +225,7 @@ class cron_task extends \core\task\scheduled_task {
         foreach ($userlist as $key => $user) {
             foreach ($role_array as $role) {
                 if (user_has_role_assignment($user->id, $role)) {
+                    mtrace('Ignore user '.$user->id.' with role '.$role);
                     unset($userlist[$key]);
                     continue;
                 }

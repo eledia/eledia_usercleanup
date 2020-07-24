@@ -40,19 +40,20 @@ class block_eledia_usercleanup_testcase extends advanced_testcase {
         set_config('exclude_roles', '1', 'block_eledia_usercleanup');
 
         // Build up Testdata.
-        $user1 = $generator->create_user(array('lastaccess' => (time()-(60*60*24*4))));// Should be deleted.
-        $user2 = $generator->create_user(array('lastaccess' => (time()-(60*60*24*2))));// Should be informed.
+        $user1 = $generator->create_user(array('lastaccess' => 1));// Should be deleted.
+        $user2 = $generator->create_user(array('lastaccess' => 1));// Should be informed.
         $course = $generator->create_course();
-        $user3 = $generator->create_and_enrol($course, 'student', array('lastaccess' => (time()-(60*60*24*4))));// Should let be because of enrolment.
-        $user4 = $generator->create_user(array('lastaccess' => (time()-(60*60*24*4))));// Should let be because role.
+        $user3 = $generator->create_and_enrol($course, 'student', array('lastaccess' => 1));// Should let be because of enrolment.
+        $user4 = $generator->create_user(array('lastaccess' => (1)));// Should let be because role.
         $generator->role_assign(1, $user4->id);
         $user5 = $generator->create_user(array('lastaccess' => (time()-(60*60*20))));// Should let be because time.
 
-        $tasks = \core\task\manager::get_scheduled_task('\block_eledia_usercleanup\task\cron_task');
-        cron_run_single_task($tasks);
+        $task = new \block_eledia_usercleanup\task\cron_task();
+        $task->execute();
+
         // We dont wont to wait a day to deletion. So change the timestamp of informed here.
         $DB->set_field('block_eledia_usercleanup', 'timestamp', 0, array('userid' => $user1->id));
-        cron_run_single_task($tasks);
+        $task->execute();
 
         //Check outcome.
         $user1_record = $DB->get_record('user', array('id' => $user1->id));
@@ -73,7 +74,7 @@ class block_eledia_usercleanup_testcase extends advanced_testcase {
         // Testcase deletion without warning.
         set_config('no_inform_mail', '1', 'block_eledia_usercleanup');
         $user6 = $generator->create_user(array('lastaccess' => (time()-(60*60*24*4))));// Should be deleted.
-        cron_run_single_task($tasks);
+        $task->execute();
         $user6_record = $DB->get_record('user', array('id' => $user6->id));
         $this->assertEquals(1, $user6_record->deleted);
     }
